@@ -369,7 +369,11 @@ function wp_install_defaults($user_id) {
         $wpdb->insert( $wpdb->postmeta, array( 'post_id' => $wpdb->insert_id, 'meta_key' => '_wp_page_template', 'meta_value' => empty($page['template'])?'default':$page['template'] ) );
         $post_id++;
     }
-
+    foreach($wp_maker->config['post-cates'] as $slug=>$cate)
+    {
+        //@doto insert cate data
+        $cate_tt_ids[]=$wpdb->insert_id;
+    }
     foreach($wp_maker->config['posts'] as $slug=>$post)
     {
         $post['slug'] = $slug;
@@ -391,6 +395,7 @@ function wp_install_defaults($user_id) {
                                     'pinged' => '',
                                     'post_content_filtered' => ''
                                     ));
+        $cat_tt_id = $cate_tt_ids[$post['cate']];
         $wpdb->insert( $wpdb->term_relationships, array('term_taxonomy_id' => $cat_tt_id, 'object_id' => $wpdb->insert_id) );
         if(!empty($wp_maker->config['dev']['dummy_comment']))
         {
